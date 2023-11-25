@@ -49,7 +49,7 @@ namespace CollegeApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
 
                     b.HasData(
                         new

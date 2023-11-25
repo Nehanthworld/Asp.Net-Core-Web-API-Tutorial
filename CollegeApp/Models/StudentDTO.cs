@@ -18,6 +18,6 @@ namespace CollegeApp.Models
         public string Address { get; set; }
         //[DateCheck]
         //public DateTime AdmissionDate { get; set; }
-
+        public DateTime DOB { get; set; }
     }
 }
