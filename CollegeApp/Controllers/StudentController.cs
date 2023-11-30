@@ -25,6 +25,7 @@ namespace CollegeApp.Controllers
         public ActionResult<IEnumerable<StudentDTO>> GetStudents()
         {
             _logger.LogInformation("GetStudents method started");
+            //var students = _dbContext.Students.ToList();
             var students = _dbContext.Students.Select(s => new StudentDTO()
             {
                 Id = s.Id,
@@ -65,7 +66,8 @@ namespace CollegeApp.Controllers
                 Id = student.Id,
                 StudentName = student.StudentName,
                 Email = student.Email,
-                Address = student.Address
+                Address = student.Address,
+                DOB = student.DOB
             };
             //OK - 200 - Success
             return Ok(studentDTO);
@@ -91,7 +93,8 @@ namespace CollegeApp.Controllers
                 Id = student.Id,
                 StudentName = student.StudentName,
                 Email = student.Email,
-                Address = student.Address
+                Address = student.Address,
+                DOB = student.DOB
             };
             //OK - 200 - Success
             return Ok(studentDTO);
@@ -123,7 +126,8 @@ namespace CollegeApp.Controllers
             {
                 StudentName = model.StudentName,
                 Address = model.Address,
-                Email = model.Email
+                Email = model.Email,
+                DOB = model.DOB
             };
             _dbContext.Students.Add(student);
             _dbContext.SaveChanges();
@@ -194,6 +198,8 @@ namespace CollegeApp.Controllers
             existingStudent.StudentName = studentDTO.StudentName;
             existingStudent.Email = studentDTO.Email;
             existingStudent.Address = studentDTO.Address;
+            existingStudent.DOB = studentDTO.DOB;
+
             _dbContext.SaveChanges();
 
             //204 - NoContent
