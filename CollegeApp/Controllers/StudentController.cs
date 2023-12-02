@@ -1,4 +1,5 @@
-﻿using CollegeApp.Data;
+﻿using AutoMapper;
+using CollegeApp.Data;
 using CollegeApp.Models;
 using CollegeApp.MyLogging;
 using Microsoft.AspNetCore.JsonPatch;
@@ -14,29 +15,27 @@ namespace CollegeApp.Controllers
 
         private readonly ILogger<StudentController> _logger;
         private readonly CollegeDBContext _dbContext;
-        public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext)
+        private readonly IMapper _mapper;
+        public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext,
+            IMapper mapper)
         {
             _logger = logger;
             _dbContext = dbContext;
+            _mapper = mapper;
         }
         [HttpGet]
         [Route("All", Name = "GetAllStudents")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudentsAsync()
         {
             _logger.LogInformation("GetStudents method started");
-            //var students = await _dbContext.Students.ToListAsync();
-            var students = await _dbContext.Students.Select(s => new StudentDTO()
-            {
-                Id = s.Id,
-                StudentName = s.StudentName,
-                Address = s.Address,
-                Email = s.Email,
-                DOB = s.DOB
-            }).ToListAsync();
+            var students = await _dbContext.Students.ToListAsync();
+
+            var studentDTOData = _mapper.Map<List<StudentDTO>>(students);
+
             //OK - 200 - Success
-            return Ok(students);
+            return Ok(studentDTOData);
         }
 
         [HttpGet]
@@ -62,14 +61,8 @@ namespace CollegeApp.Controllers
                 return NotFound($"The student with id {id} not found");
             }
 
-            var studentDTO = new StudentDTO
-            {
-                Id = student.Id,
-                StudentName = student.StudentName,
-                Email = student.Email,
-                Address = student.Address,
-                DOB = student.DOB
-            };
+            var studentDTO = _mapper.Map<StudentDTO>(student);
+
             //OK - 200 - Success
             return Ok(studentDTO);
         }
@@ -89,14 +82,9 @@ namespace CollegeApp.Controllers
             //NotFound - 404 - NotFound - Client error
             if (student == null)
                 return NotFound($"The student with name {name} not found");
-            var studentDTO = new StudentDTO
-            {
-                Id = student.Id,
-                StudentName = student.StudentName,
-                Email = student.Email,
-                Address = student.Address,
-                DOB = student.DOB
-            };
+
+            var studentDTO = _mapper.Map<StudentDTO>(student);
+
             //OK - 200 - Success
             return Ok(studentDTO);
         }
@@ -107,12 +95,12 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<StudentDTO>> CreateStudentAsync([FromBody] StudentDTO model)
+        public async Task<ActionResult<StudentDTO>> CreateStudentAsync([FromBody] StudentDTO dto)
         {
             //if (!ModelState.IsValid)
             //    return BadRequest(ModelState);
 
-            if (model == null)
+            if (dto == null)
                 return BadRequest();
 
             //if(model.AdmissionDate < DateTime.Now)
@@ -123,21 +111,16 @@ namespace CollegeApp.Controllers
             //    return BadRequest(ModelState);
             //}    
 
-            Student student = new Student
-            {
-                StudentName = model.StudentName,
-                Address = model.Address,
-                Email = model.Email,
-                DOB = model.DOB
-            };
+            Student student = _mapper.Map<Student>(dto);
+
             await _dbContext.Students.AddAsync(student);
             await _dbContext.SaveChangesAsync();
 
-            model.Id = student.Id;
+            dto.Id = student.Id;
             //Status - 201
             //https://localhost:7185/api/Student/3
             //New student details
-            return CreatedAtRoute("GetStudentById", new { id = model.Id}, model);
+            return CreatedAtRoute("GetStudentById", new { id = dto.Id}, dto);
         }
 
         [HttpPut]
@@ -147,24 +130,18 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> UpdateStudentAsync([FromBody] StudentDTO model)
+        public async Task<ActionResult> UpdateStudentAsync([FromBody] StudentDTO dto)
         {
-            if (model == null || model.Id <= 0)
+            if (dto == null || dto.Id <= 0)
                 BadRequest();
 
-            var existingStudent = await _dbContext.Students.AsNoTracking().Where(s => s.Id == model.Id).FirstOrDefaultAsync();
+            var existingStudent = await _dbContext.Students.AsNoTracking().Where(s => s.Id == dto.Id).FirstOrDefaultAsync();
 
             if (existingStudent == null)
                 return NotFound();
 
-            var newRecord = new Student()
-            {
-                Id = existingStudent.Id,
-                StudentName = model.StudentName,
-                Email = model.Email,
-                Address = model.Address,
-                DOB = model.DOB
-            };
+            var newRecord = _mapper.Map<Student>(dto);
+
             _dbContext.Students.Update(newRecord);
 
             //existingStudent.StudentName = model.StudentName;
@@ -189,28 +166,21 @@ namespace CollegeApp.Controllers
             if (patchDocument == null || id <= 0)
                 BadRequest();
 
-            var existingStudent = await _dbContext.Students.Where(s => s.Id == id).FirstOrDefaultAsync();
+            var existingStudent = await _dbContext.Students.AsNoTracking().Where(s => s.Id == id).FirstOrDefaultAsync();
 
             if (existingStudent == null)
                 return NotFound();
 
-            var studentDTO = new StudentDTO
-            {
-                Id = existingStudent.Id,
-                StudentName = existingStudent.StudentName,
-                Email = existingStudent.Email,
-                Address = existingStudent.Address
-            };
+            var studentDTO = _mapper.Map<StudentDTO>(existingStudent);
 
             patchDocument.ApplyTo(studentDTO, ModelState);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            existingStudent.StudentName = studentDTO.StudentName;
-            existingStudent.Email = studentDTO.Email;
-            existingStudent.Address = studentDTO.Address;
-            existingStudent.DOB = studentDTO.DOB;
+            existingStudent = _mapper.Map<Student>(studentDTO);
+
+            _dbContext.Students.Update(existingStudent);
 
             await _dbContext.SaveChangesAsync();
 
