@@ -1,7 +1,4 @@
-﻿using CollegeApp.Validators;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CollegeApp.Models
 {
