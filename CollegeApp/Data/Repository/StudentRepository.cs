@@ -1,6 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-
+﻿using Microsoft.EntityFrameworkCore;
 namespace CollegeApp.Data.Repository
 {
     public class StudentRepository : IStudentRepository
