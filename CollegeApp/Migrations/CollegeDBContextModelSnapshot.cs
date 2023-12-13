@@ -53,8 +53,8 @@ namespace CollegeApp.Migrations
                         new
                         {
                             Id = 2,
-                            DepartmentName = "CSC",
-                            Description = "CSC Department"
+                            DepartmentName = "CSE",
+                            Description = "CSE Department"
                         });
                 });
 

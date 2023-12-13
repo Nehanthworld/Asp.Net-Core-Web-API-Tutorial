@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollegeApp.Data.Config
 {
@@ -12,26 +12,22 @@ namespace CollegeApp.Data.Config
 
             builder.Property(x => x.Id).UseIdentityColumn();
 
-            builder.Property(n => n.DepartmentName).HasMaxLength(200).IsRequired();
+            builder.Property(n => n.DepartmentName).IsRequired().HasMaxLength(200);
             builder.Property(n => n.Description).HasMaxLength(500).IsRequired(false);
 
             builder.HasData(new List<Department>()
             {
-                new Department
-                {
+                new Department {
                     Id = 1,
                     DepartmentName = "ECE",
-                    Description = "ECE Department"
+                    Description="ECE Department",
                 },
-                new Department
-                {
+                new Department {
                     Id = 2,
-                    DepartmentName = "CSC",
-                    Description = "CSC Department"
+                    DepartmentName = "CSE",
+                    Description="CSE Department",
                 }
             });
-
-
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CollegeApp.Migrations
 {
     [DbContext(typeof(CollegeDBContext))]
-    [Migration("20231212041923_AddingDepartmentsTable")]
-    partial class AddingDepartmentsTable
+    [Migration("20231212165511_AddDepartmentsTable")]
+    partial class AddDepartmentsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,15 +35,30 @@ namespace CollegeApp.Migrations
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DepartmentName = "ECE",
+                            Description = "ECE Department"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DepartmentName = "CSE",
+                            Description = "CSE Department"
+                        });
                 });
 
             modelBuilder.Entity("CollegeApp.Data.Student", b =>
