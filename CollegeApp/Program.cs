@@ -1,4 +1,5 @@
 
+using CollegeApp;
 using CollegeApp.Configurations;
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
@@ -45,7 +46,14 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 builder.Services.AddTransient<IMyLogger, LogToServerMemory>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));
+builder.Services.AddCors(options => options.AddPolicy("MyTestCORS", policy =>
+{
+    //Allow only few origins
+    policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
 
+    //Allow all origins
+    //policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+}));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("MyTestCORS");
 
 app.UseAuthorization();
 

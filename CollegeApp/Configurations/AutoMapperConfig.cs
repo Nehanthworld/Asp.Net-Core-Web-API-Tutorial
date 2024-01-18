@@ -19,9 +19,14 @@ namespace CollegeApp.Configurations
             //CreateMap<StudentDTO, Student>().ReverseMap().ForMember(n => n.StudentName, opt => opt.Ignore());
 
             //Config for transforming some property
+            //Transformation for entire class
             //CreateMap<StudentDTO, Student>().ReverseMap().AddTransform<string>(n => string.IsNullOrEmpty(n) ? "No address found" : n);
+            //Transformation for single property
+            //CreateMap<StudentDTO, Student>().ReverseMap().ForMember(n => n.Address, opt => opt.MapFrom(x => string.IsNullOrEmpty(x.Address) ? "No address found" : x.Address));
 
             CreateMap<StudentDTO, Student>().ReverseMap();
+
+
         }
     }
 }
