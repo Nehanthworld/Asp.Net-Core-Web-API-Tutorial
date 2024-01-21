@@ -2,6 +2,7 @@
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
 using CollegeApp.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace CollegeApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors(PolicyName = "AllowAll")]
     public class StudentController : ControllerBase
     {
 
@@ -27,6 +29,7 @@ namespace CollegeApp.Controllers
         [Route("All", Name = "GetAllStudents")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [EnableCors(PolicyName = "AllowOnlyMicrosoft")]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudentsAsync()
         {
             _logger.LogInformation("GetStudents method started");
@@ -44,6 +47,7 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [DisableCors]
         public async Task<ActionResult<StudentDTO>> GetStudentByIdAsync(int id)
         {
             //BadRequest - 400 - Badrequest - Client error

@@ -46,14 +46,28 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 builder.Services.AddTransient<IMyLogger, LogToServerMemory>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));
-builder.Services.AddCors(options => options.AddPolicy("MyTestCORS", policy =>
-{
-    //Allow only few origins
-    policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
-
-    //Allow all origins
-    //policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-}));
+builder.Services.AddCors(options => {
+    //options.AddDefaultPolicy(policy =>
+    //{
+    //    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    //});
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+    options.AddPolicy("AllowOnlyLocalhost", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200").WithHeaders("Accept","sdf","").WithMethods("GET","POST");
+    });
+    options.AddPolicy("AllowOnlyGoogle", policy =>
+    {
+        policy.WithOrigins("http://google.com","http://gmail.com","http://drive.google.com").AllowAnyHeader().AllowAnyMethod();
+    });
+    options.AddPolicy("AllowOnlyMicrosoft", policy =>
+    {
+        policy.WithOrigins("http://outlook.com","http://microsoft.com","http://onedrive.google.com").AllowAnyHeader().AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -65,7 +79,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("MyTestCORS");
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
