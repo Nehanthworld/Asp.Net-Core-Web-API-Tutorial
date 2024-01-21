@@ -47,17 +47,17 @@ builder.Services.AddTransient<IMyLogger, LogToServerMemory>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));
 builder.Services.AddCors(options => {
-    //options.AddDefaultPolicy(policy =>
-    //{
-    //    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    //});
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
     options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
     options.AddPolicy("AllowOnlyLocalhost", policy =>
     {
-        policy.WithOrigins("http://localhost:4200").WithHeaders("Accept","sdf","").WithMethods("GET","POST");
+        policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
     });
     options.AddPolicy("AllowOnlyGoogle", policy =>
     {
@@ -79,10 +79,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("api/testingendpoint",
+        context => context.Response.WriteAsync("Test Response"))
+        .RequireCors("AllowOnlyLocalhost");
+
+    endpoints.MapControllers()
+             .RequireCors("AllowAll");
+
+    endpoints.MapGet("api/testendpoint2",
+        context => context.Response.WriteAsync("test response 2"));
+
+});
 
 app.Run();

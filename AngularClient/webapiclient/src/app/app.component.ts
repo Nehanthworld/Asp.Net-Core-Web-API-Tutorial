@@ -25,7 +25,7 @@ export class AppComponent {
     };
   }
   getStudents() {
-    this._httpClient.get('https://localhost:7185/api/Student/All', this.getHeaders()).subscribe({
+    this._httpClient.get('https://localhost:7185/api/testendpoint2', this.getHeaders()).subscribe({
       //Success  
       next: (result: any) => {
         console.log(result);
