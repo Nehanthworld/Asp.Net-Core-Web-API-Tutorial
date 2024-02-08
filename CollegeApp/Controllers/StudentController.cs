@@ -2,6 +2,7 @@
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
 using CollegeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace CollegeApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     //[EnableCors(PolicyName = "AllowAll")]
+    [Authorize(Roles = "Superadmin,Admin")]
     public class StudentController : ControllerBase
     {
 
@@ -30,6 +32,7 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //[EnableCors(PolicyName = "AllowOnlyMicrosoft")]
+        //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudentsAsync()
         {
             _logger.LogInformation("GetStudents method started");

@@ -12,22 +12,51 @@ import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http'
 })
 export class AppComponent {
   title = 'webapiclient';
+  currentUser: any;
+  allStudents: any;
   constructor(private _httpClient: HttpClient) {
 
+  }
+  private loginHeaders(): any {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json;',
+        'Accept': 'application/json;',
+      })
+    };
   }
   private getHeaders(): any {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json;',
         'Accept': 'application/json;',
-        'myheader': 'Venkat'
+        'Authorization': 'bearer ' + this.currentUser?.token
       })
     };
   }
-  getStudents() {
-    this._httpClient.get('https://localhost:7185/api/testendpoint2', this.getHeaders()).subscribe({
+  getJWTToken(){
+    let payload = {
+      "username": "Venkat",
+      "password": "Venkat123"
+    };
+
+    this._httpClient.post('https://localhost:7185/api/Login', payload, this.loginHeaders()).subscribe({
       //Success  
       next: (result: any) => {
+        console.log(result);
+        this.currentUser = result;
+      },
+      //Error
+      error: (error: any) => {
+        console.log(error);
+      }
+    })
+  }
+  getStudents() {
+    this._httpClient.get('https://localhost:7185/api/Student/All', this.getHeaders()).subscribe({
+      //Success  
+      next: (result: any) => {
+        this.allStudents = result;
         console.log(result);
       },
       //Error

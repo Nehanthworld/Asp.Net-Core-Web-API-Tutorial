@@ -228,6 +228,13 @@
       <h1>Hello, {{ title }}</h1>
       <p>Congratulations! Your app is running. 🎉</p>
       <button (click)="getStudents()">Get All Students</button>
+      <button (click)="getJWTToken()">Login</button>
+      <div class="response">
+        Login Response: {{currentUser | json}}
+      </div>
+      <div class="response">
+        Get All Students Response: {{allStudents | json}}
+      </div>
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">

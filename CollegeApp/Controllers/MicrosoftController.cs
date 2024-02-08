@@ -9,5 +9,15 @@ namespace CollegeApp.Controllers
     [EnableCors(PolicyName = "AllowOnlyMicrosoft")]
     public class MicrosoftController : ControllerBase
     {
+        [HttpGet]
+        public string Login(LoginModel model)
+        {
+            return "";
+        }
+    }
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

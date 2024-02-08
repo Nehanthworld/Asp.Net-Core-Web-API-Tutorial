@@ -4,8 +4,11 @@ using CollegeApp.Configurations;
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
 using CollegeApp.MyLogging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -68,6 +71,24 @@ builder.Services.AddCors(options => {
         policy.WithOrigins("http://outlook.com","http://microsoft.com","http://onedrive.google.com").AllowAnyHeader().AllowAnyMethod();
     });
 });
+var key = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecret"));
+//JWT Authentication Configuration
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    //options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+    };
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -95,7 +116,7 @@ app.UseEndpoints(endpoints =>
              .RequireCors("AllowAll");
 
     endpoints.MapGet("api/testendpoint2",
-        context => context.Response.WriteAsync("test response 2"));
+        context => context.Response.WriteAsync(builder.Configuration.GetValue<string>("JWTSecret")));
 
 });
 
