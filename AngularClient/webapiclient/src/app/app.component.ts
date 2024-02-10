@@ -37,7 +37,8 @@ export class AppComponent {
   getJWTToken(){
     let payload = {
       "username": "Venkat",
-      "password": "Venkat123"
+      "password": "Venkat123",
+      "policy": "Local"
     };
 
     this._httpClient.post('https://localhost:7185/api/Login', payload, this.loginHeaders()).subscribe({
@@ -54,6 +55,19 @@ export class AppComponent {
   }
   getStudents() {
     this._httpClient.get('https://localhost:7185/api/Student/All', this.getHeaders()).subscribe({
+      //Success  
+      next: (result: any) => {
+        this.allStudents = result;
+        console.log(result);
+      },
+      //Error
+      error: (error: any) => {
+        console.log(error);
+      }
+    })
+  }
+  callMicrosoft() {
+    this._httpClient.get('https://localhost:7185/api/Microsoft', this.getHeaders()).subscribe({
       //Success  
       next: (result: any) => {
         this.allStudents = result;

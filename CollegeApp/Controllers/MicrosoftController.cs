@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,18 +7,14 @@ namespace CollegeApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors(PolicyName = "AllowOnlyMicrosoft")]
+    //[EnableCors(PolicyName = "AllowOnlyMicrosoft")]
+    [Authorize(AuthenticationSchemes = "LoginForMicrosoftUsers", Roles = "Superadmin,Admin")]
     public class MicrosoftController : ControllerBase
     {
         [HttpGet]
-        public string Login(LoginModel model)
+        public ActionResult Get()
         {
-            return "";
+            return Ok("This is microsoft");
         }
-    }
-    public class LoginModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
     }
 }

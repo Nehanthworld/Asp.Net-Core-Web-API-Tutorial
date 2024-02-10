@@ -71,24 +71,48 @@ builder.Services.AddCors(options => {
         policy.WithOrigins("http://outlook.com","http://microsoft.com","http://onedrive.google.com").AllowAnyHeader().AllowAnyMethod();
     });
 });
-var key = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecret"));
+var keyJWTSecretforGoogle = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecretforGoogle"));
+var keyJWTSecretforMicrosoft = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecretforMicrosoft"));
+var keyJWTSecretforLocal = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecretforLocal"));
 //JWT Authentication Configuration
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+}).AddJwtBearer("LoginForGooleUsers", options =>
 {
     //options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
+        IssuerSigningKey = new SymmetricSecurityKey(keyJWTSecretforGoogle),
         ValidateIssuer = false,
         ValidateAudience = false,
     };
-});
+}).AddJwtBearer("LoginForMicrosoftUsers", options =>
+ {
+     //options.RequireHttpsMetadata = false;
+     options.SaveToken = true;
+     options.TokenValidationParameters = new TokenValidationParameters()
+     {
+         ValidateIssuerSigningKey = true,
+         IssuerSigningKey = new SymmetricSecurityKey(keyJWTSecretforMicrosoft),
+         ValidateIssuer = false,
+         ValidateAudience = false,
+     };
+ }).AddJwtBearer("LoginForLocalUsers", options =>
+ {
+     //options.RequireHttpsMetadata = false;
+     options.SaveToken = true;
+     options.TokenValidationParameters = new TokenValidationParameters()
+     {
+         ValidateIssuerSigningKey = true,
+         IssuerSigningKey = new SymmetricSecurityKey(keyJWTSecretforLocal),
+         ValidateIssuer = false,
+         ValidateAudience = false,
+     };
+ });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
