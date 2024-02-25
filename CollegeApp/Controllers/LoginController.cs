@@ -28,20 +28,34 @@ namespace CollegeApp.Controllers
                 return BadRequest("Please provide username and password");
             }
             LoginResponseDTO response = new() { Username = model.Username };
-
+            string audience = string.Empty;
+            string issuer = string.Empty;
             byte[] key = null;
             if (model.Policy == "Local")
+            {
+                issuer = _configuration.GetValue<string>("LocalIssuer");
+                audience = _configuration.GetValue<string>("LocalAudience");
                 key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecretforLocal"));
+            }
             else if (model.Policy == "Microsoft")
+            {
+                issuer = _configuration.GetValue<string>("MicrosoftIssuer");
+                audience = _configuration.GetValue<string>("MicrosoftAudience");
                 key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecretforMicrosoft"));
+            }
             else if (model.Policy == "Google")
+            {
+                issuer = _configuration.GetValue<string>("GoogleIssuer");
+                audience = _configuration.GetValue<string>("GoogleAudience");
                 key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecretforGoogle"));
-
+            }
             if (model.Username == "Venkat" && model.Password == "Venkat123")
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var tokenDescriptor = new SecurityTokenDescriptor()
                 {
+                    Issuer = issuer,
+                    Audience = audience,
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         //Username

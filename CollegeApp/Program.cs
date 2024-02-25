@@ -74,6 +74,13 @@ builder.Services.AddCors(options => {
 var keyJWTSecretforGoogle = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecretforGoogle"));
 var keyJWTSecretforMicrosoft = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecretforMicrosoft"));
 var keyJWTSecretforLocal = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecretforLocal"));
+string GoogleAudience = builder.Configuration.GetValue<string>("GoogleAudience");
+string MicrosoftAudience = builder.Configuration.GetValue<string>("MicrosoftAudience");
+string LocalAudience = builder.Configuration.GetValue<string>("LocalAudience");
+string GoogleIssuer = builder.Configuration.GetValue<string>("GoogleIssuer");
+string MicrosoftIssuer = builder.Configuration.GetValue<string>("MicrosoftIssuer");
+string LocalIssuer = builder.Configuration.GetValue<string>("LocalIssuer");
+
 //JWT Authentication Configuration
 builder.Services.AddAuthentication(options =>
 {
@@ -87,8 +94,12 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(keyJWTSecretforGoogle),
-        ValidateIssuer = false,
-        ValidateAudience = false,
+
+        ValidateIssuer = true,
+        ValidIssuer = GoogleIssuer,
+
+        ValidateAudience = true,
+        ValidAudience = GoogleAudience
     };
 }).AddJwtBearer("LoginForMicrosoftUsers", options =>
  {
@@ -98,8 +109,12 @@ builder.Services.AddAuthentication(options =>
      {
          ValidateIssuerSigningKey = true,
          IssuerSigningKey = new SymmetricSecurityKey(keyJWTSecretforMicrosoft),
-         ValidateIssuer = false,
-         ValidateAudience = false,
+
+         ValidateIssuer = true,
+         ValidIssuer = MicrosoftIssuer,
+
+         ValidateAudience = true,
+         ValidAudience = MicrosoftAudience
      };
  }).AddJwtBearer("LoginForLocalUsers", options =>
  {
@@ -109,8 +124,12 @@ builder.Services.AddAuthentication(options =>
      {
          ValidateIssuerSigningKey = true,
          IssuerSigningKey = new SymmetricSecurityKey(keyJWTSecretforLocal),
-         ValidateIssuer = false,
-         ValidateAudience = false,
+
+         ValidateIssuer = true,
+         ValidIssuer = LocalIssuer,
+
+         ValidateAudience = true,
+         ValidAudience = LocalAudience
      };
  });
 var app = builder.Build();
