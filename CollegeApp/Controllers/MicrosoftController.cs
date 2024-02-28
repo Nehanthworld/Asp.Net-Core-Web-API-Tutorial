@@ -11,6 +11,8 @@ namespace CollegeApp.Controllers
     [Authorize(AuthenticationSchemes = "LoginForMicrosoftUsers", Roles = "Superadmin,Admin")]
     public class MicrosoftController : ControllerBase
     {
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public ActionResult Get()
         {
