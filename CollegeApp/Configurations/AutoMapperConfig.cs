@@ -25,6 +25,7 @@ namespace CollegeApp.Configurations
             //CreateMap<StudentDTO, Student>().ReverseMap().ForMember(n => n.Address, opt => opt.MapFrom(x => string.IsNullOrEmpty(x.Address) ? "No address found" : x.Address));
 
             CreateMap<StudentDTO, Student>().ReverseMap();
+            CreateMap<RoleDTO, Role>().ReverseMap();
 
 
         }
