@@ -1,0 +1,23 @@
+<h1>Roles</h1>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Active</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (role of roles; track $index) {
+            <tr>
+                <th scope="row">{{role.id}}</th>
+                <td>{{role.roleName}}</td>
+                <td>{{role.description}}</td>
+                <td>{{role.isActive}}</td>
+                <td><button type="button" class="btn btn-primary" title="Edit"><i class="bi bi-pencil-square"></i></button></td>
+            </tr>
+        }
+    </tbody>
+</table>

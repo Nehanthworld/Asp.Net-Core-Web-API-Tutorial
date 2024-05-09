@@ -2,7 +2,6 @@
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
 using CollegeApp.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
