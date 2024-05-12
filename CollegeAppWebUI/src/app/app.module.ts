@@ -8,6 +8,7 @@ import { UserComponent } from './components/user/user.component';
 import { StudentComponent } from './components/student/student.component';
 import { RoleService } from './services/role.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     RoleService,

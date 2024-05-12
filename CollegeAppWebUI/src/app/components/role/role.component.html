@@ -1,23 +1,92 @@
-<h1>Roles</h1>
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Active</th>
-            <th scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (role of roles; track $index) {
-            <tr>
-                <th scope="row">{{role.id}}</th>
-                <td>{{role.roleName}}</td>
-                <td>{{role.description}}</td>
-                <td>{{role.isActive}}</td>
-                <td><button type="button" class="btn btn-primary" title="Edit"><i class="bi bi-pencil-square"></i></button></td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-md-6">
+        <h1>Roles</h1>
+    </div>
+    <div class="col-md-6">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary mt-2 me-2 bi bi-plus-square"
+                (click)="edit(content, {id:0,roleName:'',description:'',isActive:false})"> Add New Role</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Active</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (role of roles; track $index) {
+                <tr>
+                    <th scope="row">{{role.id}}</th>
+                    <td>{{role.roleName}}</td>
+                    <td>{{role.description}}</td>
+                    <td>{{role.isActive}}</td>
+                    <td>
+                        <button type="button" (click)="edit(content, role)" class="btn btn-primary" title="Edit"><i
+                                class="bi bi-pencil-square"></i></button>
+                        <button type="button" (click)="delete(role.id)" class="btn btn-danger ms-2" title="Delete"><i
+                                class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add / Edit Role</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="roleForm">
+            <div class="row">
+                <div class="col-md-3 d-flex justify-content-end">
+                    <label for="roleName">Role name</label>
+                </div>
+                <div class="col-md-9">
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input id="roleName" class="form-control" placeholder="Role name" name="roleName"
+                                width="200px" formControlName="roleName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex justify-content-end">
+                    <label for="description">Role Description</label>
+                </div>
+                <div class="col-md-9">
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input id="description" class="form-control" placeholder="Description" name="description"
+                                width="200px" formControlName="description" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex justify-content-end">
+                    <label for="active">Status</label>
+                </div>
+                <div class="col-md-9">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" formControlName="isActive"> Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" (click)="c('Cancelled')">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" (click)="Save()">Save</button>
+    </div>
+</ng-template>
