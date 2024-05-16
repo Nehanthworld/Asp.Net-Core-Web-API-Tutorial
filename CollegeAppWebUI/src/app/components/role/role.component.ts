@@ -3,6 +3,7 @@ import { RoleService } from '../../services/role.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl } from '@angular/forms';
 import { NotificationService } from '../../services/common/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-role',
@@ -19,7 +20,7 @@ export class RoleComponent {
     isActive: new FormControl(false),
   });
   constructor(private _roleService: RoleService, private modalService: NgbModal,
-    private _notificationService: NotificationService) {
+    private _notificationService: NotificationService, private _router: Router) {
     this.getRoles();
   }
   getRoles() {
@@ -45,7 +46,7 @@ export class RoleComponent {
     this.modalService.open(content, { centered: true, size: 'lg' });
   }
   delete(id: number) {
-    this._notificationService.deleteConfirmation("Are you sure, you want to delete the role", "Delete Confirmation",
+    this._notificationService.deleteConfirmation("Are you sure, you want to delete the role", "Delete Confirmation?",
       () => {
         this._roleService.deleteRole(id).subscribe({
           //Success  
@@ -103,5 +104,10 @@ export class RoleComponent {
     // console.log(this.roleForm.value)
     // console.log("Saved.");
     this.modalService.dismissAll();
+  }
+
+  managePrivileges(role: any){
+    this._router.navigate(['role-privileges', role.id]);
+    sessionStorage.setItem('roleName', role.roleName);
   }
 }

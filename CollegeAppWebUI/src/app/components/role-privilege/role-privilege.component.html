@@ -1,0 +1,70 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="header text-center">
+            <h3 class="title">Showing Privileges for the Role: {{currentRole}}<a [routerLink]="['/roles']" class="btn-link btn-twitter mt-2" style="font-size: medium;float: inline-end;"><i class="bi bi-arrow-left-circle"></i>  Go back to roles</a></h3>
+    </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                          <thead>
+                              <tr>
+                                <th class="td-head">Available Privileges</th>
+                                <th class="td-head">Description</th>
+                                <th class="disabled-sorting text-right td-head">Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let row of availableRolePrivilegeList">
+                                  <td>{{row.rolePrivilegeName}}</td>
+                                  <td>{{row.description}}</td>
+                                  <td class="td-actions text-right">
+                                  <button mat-raised-button type="button" class="btn btn-success" (click)="saveRolePrivileges(row)">
+                                      <i class="bi bi-plus-square"></i>  Assign
+                                  </button>
+                                  </td>
+                              </tr>
+                              <tr class="text-center" *ngIf="availableRolePrivilegeList?.length == 0"><td colspan="3">No Available privileges found</td></tr>
+                            </tbody>
+                      </table>
+                  </div>
+              </div>
+              <!-- end content-->
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                          <thead>
+                              <tr>
+                                <th class="td-head">Assigned Privileges</th>
+                                <th class="td-head">Description</th>
+                                <th class="disabled-sorting text-right td-head">Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let row of assignedRolePrivilegeList">
+                                  <td>{{row.rolePrivilegeName}}</td>
+                                  <td>{{row.description}}</td>
+                                  <td class="td-actions text-right">
+                                    <button mat-raised-button type="button" class="btn btn-danger" (click)="removeRolePrivileges(row)">
+                                      <i class="bi bi-trash"></i>  Un-Assign
+                                  </button>
+                                  </td>
+                              </tr>
+                              <tr class="text-center" *ngIf="assignedRolePrivilegeList?.length == 0"><td colspan="3">No Assigned privileges found</td></tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              <!-- end content-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

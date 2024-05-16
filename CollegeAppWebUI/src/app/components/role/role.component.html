@@ -29,7 +29,9 @@
                     <td>{{role.description}}</td>
                     <td>{{role.isActive}}</td>
                     <td>
-                        <button type="button" (click)="edit(content, role)" class="btn btn-primary" title="Edit"><i
+                        <button type="button" (click)="managePrivileges(role)" class="btn btn-warning" title="Manage Privileges"><i
+                                class="bi bi-lock"></i></button>
+                        <button type="button" (click)="edit(content, role)" class="btn btn-primary ms-2" title="Edit"><i
                                 class="bi bi-pencil-square"></i></button>
                         <button type="button" (click)="delete(role.id)" class="btn btn-danger ms-2" title="Delete"><i
                                 class="bi bi-trash"></i></button>

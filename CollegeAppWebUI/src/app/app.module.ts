@@ -9,13 +9,15 @@ import { StudentComponent } from './components/student/student.component';
 import { RoleService } from './services/role.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RolePrivilegeComponent } from './components/role-privilege/role-privilege.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RoleComponent,
     UserComponent,
-    StudentComponent
+    StudentComponent,
+    RolePrivilegeComponent
   ],
   imports: [
     BrowserModule,

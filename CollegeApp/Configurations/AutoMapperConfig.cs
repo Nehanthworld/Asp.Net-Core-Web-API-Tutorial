@@ -26,6 +26,7 @@ namespace CollegeApp.Configurations
 
             CreateMap<StudentDTO, Student>().ReverseMap();
             CreateMap<RoleDTO, Role>().ReverseMap();
+            CreateMap<RolePrivilegeDTO, RolePrivilege>().ReverseMap();
 
 
         }

@@ -30,6 +30,14 @@ namespace CollegeApp.Data.Repository
         {
             return await _dbSet.ToListAsync();
         }
+        public async Task<List<T>> GetAllByFilterAsync(Expression<Func<T, bool>> filter, bool useNoTracking = false)
+        {
+            if (useNoTracking)
+                return await _dbSet.AsNoTracking().Where(filter).ToListAsync();
+            else
+                return await _dbSet.Where(filter).ToListAsync();
+
+        }
         public async Task<T> GetAsync(Expression<Func<T, bool>> filter, bool useNoTracking = false)
         {
             if (useNoTracking)
@@ -38,7 +46,6 @@ namespace CollegeApp.Data.Repository
                 return await _dbSet.Where(filter).FirstOrDefaultAsync();
 
         }
-
         //public async Task<T> GetByNameAsync(Expression<Func<T, bool>> filter)
         //{
         //    return await _dbSet.Where(filter).FirstOrDefaultAsync();
