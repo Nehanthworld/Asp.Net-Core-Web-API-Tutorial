@@ -35,7 +35,7 @@ export class RolePrivilegeComponent implements OnInit {
           if (this.assignedRolePrivilegeList && !this.assignedRolePrivilegeList.find(privilege => {
             return privilege.rolePrivilegeName === rp;
           })) {
-            this.availableRolePrivilegeList.push({ id: 0, rolePrivilegeName: rp, description: CollegeRolePrivileges[rp as keyof typeof CollegeRolePrivileges], active: true, roleId: this.roleId });
+            this.availableRolePrivilegeList.push({ id: 0, rolePrivilegeName: rp, description: CollegeRolePrivileges[rp as keyof typeof CollegeRolePrivileges], isActive: true, roleId: this.roleId });
           }
         }
       } else {

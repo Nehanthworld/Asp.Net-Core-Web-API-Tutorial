@@ -10,7 +10,7 @@ export interface RolePrivilege {
     id: number;
     rolePrivilegeName: string;
     description: string;
-    active: boolean;
+    isActive: boolean;
     roleId: number;
 }
 
