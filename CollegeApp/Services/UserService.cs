@@ -48,6 +48,28 @@ namespace CollegeApp.Services
 
             return true;
         }
+
+        public async Task<List<UserReadonlyDTO>> GetUsersAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+
+            return _mapper.Map<List<UserReadonlyDTO>>(users);
+        }
+
+        public async Task<UserReadonlyDTO> GetUserByIdAsync(int id)
+        {
+            var user = await _userRepository.GetAsync(u => u.Id == id);
+
+            return _mapper.Map<UserReadonlyDTO>(user);
+        }
+
+        public async Task<UserReadonlyDTO> GetUserByUsernameAsync(string username)
+        {
+            var user = await _userRepository.GetAsync(u => u.Username.Equals(username));
+
+            return _mapper.Map<UserReadonlyDTO>(user);
+        }
+
         public (string PasswordHash, string Salt) CreatePasswordHashWithSalt(string password)
         {
             //Create the salt
