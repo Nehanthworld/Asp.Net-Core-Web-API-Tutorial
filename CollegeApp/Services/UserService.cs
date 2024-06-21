@@ -70,6 +70,33 @@ namespace CollegeApp.Services
             return _mapper.Map<UserReadonlyDTO>(user);
         }
 
+        public async Task<bool> UpdateUserAsync(UserDTO dto)
+        {
+            ArgumentNullException.ThrowIfNull(dto, nameof(dto));
+
+            var existingUser = await _userRepository.GetAsync(u => u.Id == dto.Id, true);
+            if (existingUser == null)
+            {
+                throw new Exception($"User not found with the Id: {dto.Id}");
+            }
+
+            var userToUpdate = _mapper.Map<User>(dto);
+            userToUpdate.ModifiedDate = DateTime.Now;
+
+            //1. We will update only the user information
+            //2. We need to provide separate method to update the password
+            //for the demo purpose I am updating the password also
+            if (!string.IsNullOrEmpty(dto.Password))
+            {
+                var passwordHash = CreatePasswordHashWithSalt(dto.Password);
+                userToUpdate.Password = passwordHash.PasswordHash;
+                userToUpdate.PasswordSalt = passwordHash.Salt;
+            }
+
+            await _userRepository.UpdateAsync(userToUpdate);
+
+            return true;
+        }
         public (string PasswordHash, string Salt) CreatePasswordHashWithSalt(string password)
         {
             //Create the salt
