@@ -193,5 +193,32 @@ namespace CollegeApp.Controllers
                 return _apiResponse;
             }
         }
+        [HttpDelete]
+        [Route("Delete/{id}", Name = "DeleteUserById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult<APIResponse>> DeleteUserAsync(int id)
+        {
+            try
+            {
+                var isDeleted = await _userService.DeleteUser(id);
+
+                _apiResponse.Status = true;
+                _apiResponse.StatusCode = HttpStatusCode.OK;
+                _apiResponse.Data = isDeleted;
+
+                return Ok(_apiResponse);
+            }
+            catch (Exception ex)
+            {
+                _apiResponse.Status = false;
+                _apiResponse.StatusCode = HttpStatusCode.InternalServerError;
+                _apiResponse.Errors.Add(ex.Message);
+                return _apiResponse;
+            }
+        }
     }
 }

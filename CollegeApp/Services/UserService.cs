@@ -51,21 +51,21 @@ namespace CollegeApp.Services
 
         public async Task<List<UserReadonlyDTO>> GetUsersAsync()
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllByFilterAsync(u => !u.IsDeleted);
 
             return _mapper.Map<List<UserReadonlyDTO>>(users);
         }
 
         public async Task<UserReadonlyDTO> GetUserByIdAsync(int id)
         {
-            var user = await _userRepository.GetAsync(u => u.Id == id);
+            var user = await _userRepository.GetAsync(u => !u.IsDeleted && u.Id == id);
 
             return _mapper.Map<UserReadonlyDTO>(user);
         }
 
         public async Task<UserReadonlyDTO> GetUserByUsernameAsync(string username)
         {
-            var user = await _userRepository.GetAsync(u => u.Username.Equals(username));
+            var user = await _userRepository.GetAsync(u => !u.IsDeleted && u.Username.Equals(username));
 
             return _mapper.Map<UserReadonlyDTO>(user);
         }
@@ -74,7 +74,7 @@ namespace CollegeApp.Services
         {
             ArgumentNullException.ThrowIfNull(dto, nameof(dto));
 
-            var existingUser = await _userRepository.GetAsync(u => u.Id == dto.Id, true);
+            var existingUser = await _userRepository.GetAsync(u => !u.IsDeleted && u.Id == dto.Id, true);
             if (existingUser == null)
             {
                 throw new Exception($"User not found with the Id: {dto.Id}");
@@ -94,6 +94,26 @@ namespace CollegeApp.Services
             }
 
             await _userRepository.UpdateAsync(userToUpdate);
+
+            return true;
+        }
+        public async Task<bool> DeleteUser(int userId)
+        {
+            if(userId <= 0)
+                throw new ArgumentException(nameof(userId));
+
+            var existingUser = await _userRepository.GetAsync(u => !u.IsDeleted && u.Id == userId, true);
+            if (existingUser == null)
+            {
+                throw new Exception($"User not found with the Id: {userId}");
+            }
+
+            //1. Hard delete -- you can try this
+            //2. Soft delete -- we will do this now
+
+            existingUser.IsDeleted = true;
+
+            await _userRepository.UpdateAsync(existingUser);
 
             return true;
         }
